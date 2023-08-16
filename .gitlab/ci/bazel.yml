@@ -1,0 +1,19 @@
+♻️:gcc:compile:test:
+#    variables:
+#        <<: *common_variables
+    stage: 🔨 ✅ Build run Unit Test
+    image: docker.io/doevelopper/cfs-dev-tools-common:latest
+    script:
+#        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.io
+        - export LOG4CXX_CONFIGURATION=${CI_PROJECT_DIR}/src/main/resources/configs/log4cxx.xml
+        - export BAZEL_BIN=$(bazel info bazel-bin)
+        - make
+        # - BAZEL_OUTPUT_BASE=$(bazel info output_base)
+        # - BAZEL_SERVER_PID=$(bazel info server_pid)
+        # - BAZEL_TESTLOGS=$(bazel info bazel-testlogs)
+        # - BAZEL_GENFILES=$(bazel info bazel-genfiles)
+        # - bazel build @com_google_statechart//statechart:state_machine
+        # - bazel build @com_googlesource_code_re2//:re2
+        # - bazel query @com_google_protobuf//...
+        # - bazel build @com_google_protobuf//:protoc
+        # - bazel run @com_google_protobuf//:protoc -- --help

@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# exlude  specific to project
+workspace/
+raspberrypi3_64_defconfig*kernel-NOK

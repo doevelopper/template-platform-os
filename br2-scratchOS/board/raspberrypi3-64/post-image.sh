@@ -4,6 +4,13 @@ set -e
 
 BOARD_DIR="$(dirname $0)"
 BOARD_NAME="$(basename ${BOARD_DIR})"
+
+# if grep "^BR2_TARGET_ROOTFS_INITRAMFS=y$" "${BR2_CONFIG}" &>/dev/null; then
+# 	GENIMAGE_CFG="${BOARD_DIR}/genimage-volatile-rootfs.cfg"
+# else
+# 	GENIMAGE_CFG="${BOARD_DIR}/genimage-persistent-rootfs.cfg"
+# fi
+
 GENIMAGE_CFG="${BOARD_DIR}/genimage-${BOARD_NAME}.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 

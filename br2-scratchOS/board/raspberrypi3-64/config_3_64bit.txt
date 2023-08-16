@@ -7,7 +7,8 @@
 start_file=start.elf
 fixup_file=fixup.dat
 
-kernel=Image
+#kernel=Image
+kernel=u-boot.bin
 
 # To use an external initramfs file
 #initramfs rootfs.cpio.gz
@@ -30,3 +31,11 @@ dtoverlay=krnbt=on
 
 # enable 64bits support
 arm_64bit=1
+
+
+dtparam=i2c_arm=on
+dtparam=i2s=on
+#dtoverlay=xxx
+
+#To tell the RPi3B to start in ARMv8-mode
+#arm_control=0x200

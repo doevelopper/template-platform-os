@@ -1,0 +1,30 @@
+config BR2_PACKAGE_MODEL
+    bool "Model"
+    help
+        Model main package sources.
+
+        https://tbd.acme
+
+if BR2_PACKAGE_MODEL
+
+config BR2_PACKAGE_MODEL_TEST
+    bool "Model unit Test"
+    default "Hello World!\n"
+    help
+        Model main package sources.
+
+        https://tbd.acme
+
+endif
+
+if BR2_PACKAGE_MODEL
+
+config BR2_PACKAGE_MODEL_INTEGRATION_TEST
+    bool "Model Integration  Test"
+    default "Hello World!\n"
+    help
+        Model main package sources.
+
+        https://tbd.acme
+
+endif

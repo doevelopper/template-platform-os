@@ -1,0 +1,7 @@
+# menu "Kernel space drivers"
+#     source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/drivers/kernel/Config.in"
+# endmenu
+
+# menu "Users space drivers"
+#     source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/drivers/user/Config.in"
+# endmenu

@@ -1,0 +1,12 @@
+# menu "Applications"
+#     source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/applications/hello-autotools/Config.in"
+#     source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/applications/hello-cmake/Config.in"
+#     source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/applications/hello-makefile/Config.in"
+# endmenu
+
+# menu "Thirdparty"
+# # # source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/utils/atop2/Config.in"
+# # # source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/utils/btop/Config.in"
+# # # source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/utils/cucumber-cpp/Config.in"
+# # # source "$BR2_EXTERNAL_SCRATCHOS_PATH/packages/utils/netatop/Config.in"
+# endmenu

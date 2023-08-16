@@ -1,0 +1,213 @@
+stages:
+    - configure
+    - compile
+    - test-compile
+    - unit-test
+    - target-package
+    - feature-test
+    - verify
+    - code-review
+    - target-install
+    - site
+    - deploy
+    - target-clean
+
+variables:
+    GIT_DEPTH: "2"
+    GIT_SUBMODULE_STRATEGY: "none"
+    GET_SOURCES_ATTEMPTS: "3"
+    BUILD_GENERATOR: "Unix Makefiles"
+    COVERITY_COVERAGE_FLAG: "--all --enable-slow"
+    BUILD_INSTALL_DIRECTORY: /opt/dds
+    BUILD_TYPE: Debug
+    BUILD_DIRECTORY: "build-${CI_PROJECT_NAME}-${BUILD_TYPE}"
+
+before_script:
+    - date
+    - export NUM_CORES=$(nproc --all)
+    - export CCACHE_BASEDIR=$CI_PROJECT_DIR
+    - export OS_NAME=$(lsb_release -is)
+    - export OS_VERS_LONG=$(lsb_release -rs | sed -r "s/^([0-9]+).*/\1/") || true
+    - export PROJECT_NAME=$CI_PROJECT_NAME
+    - export TAG=$CI_BUILD_REF_NAM
+    - export BUILD_DATE=$(date +%Y-%m-%d-%H:%M:%S)
+    - export VERSION=`git describe --first-parent`
+    - COVERITY_COVERAGE_FLAG="--all --enable-slow"
+
+after_script:
+    - date
+
+.dedicated-runner: &dedicated-runner
+    retry: 1
+    tags:
+#        - dev-platform
+        - dds 
+
+.prerequisites: &prerequisites
+    before_script:
+        - echo "Running $CI_JOB_NAME in stage $CI_JOB_STAGE"
+        - echo $CI_PIPELINE_ID
+        - gcc --version
+        - g++ --version
+        - cmake --version
+        - doxygen --version
+        - uncrustify --version 
+
+validate:
+    <<: *dedicated-runner 
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+        CC: /usr/bin/gcc
+        CXX: /usr/bin/g++
+    stage: configure
+    before_script:
+        - echo "Validate the project is correct and all necessary information is available."
+    script:
+       - > 
+           if [ ! -d "${BUILD_DIRECTORY}" ]; then
+              echo cmake -E make_directory ${BUILD_DIRECTORY}
+           fi
+    after_script:
+        - echo "${BUILD_DIRECTORY} directory created"
+    artifacts:
+        name: "${CI_BUILD_NAME}"
+        expire_in: 2 hrs
+        paths:
+            - ${BUILD_DIRECTORY}
+    cache:
+        key: "$CI_BUILD_REF" #"$CI_BUILD_REF_NAME"
+        untracked: true
+        paths:
+            - $BUILD_DIRECTORY
+
+initialize:
+    <<: *dedicated-runner
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+        CC: /usr/bin/gcc
+        CXX: /usr/bin/g++
+    stage: configure
+#    dependencies:
+#        - validate
+    before_script:
+        - echo $CI_PIPELINE_ID
+        - echo "Initialize ${CI_PROJECT_NAME} build state, e.g. set properties or create directories."
+    script:
+        - >
+            if [ ! -d "${BUILD_DIRECTORY}" ]; then
+                cmake -E make_directory ${BUILD_DIRECTORY}
+            fi
+ 
+        - cmake -E chdir ${BUILD_DIRECTORY} cmake -G "${BUILD_GENERATOR}" 
+                -DCMAKE_BUILD_TYPE=${BUILD_TYPE} 
+                -DCMAKE_INSTALL_PREFIX=${BUILD_INSTALL_DIRECTORY} ..
+
+    after_script:
+        - echo "${CI_PROJECT_NAME} initialization done"
+
+    artifacts:
+        name: "${CI_BUILD_NAME}" 
+        expire_in: 1 hour 
+        paths:
+            - $BUILD_DIRECTORY
+
+    cache:
+        key: "$CI_BUILD_REF"
+        untracked: true
+        paths:
+            - $BUILD_DIRECTORY
+
+compile:
+    <<: *dedicated-runner
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+    stage: compile
+#    dependencies:
+#         - initialize
+
+    before_script:
+        - echo  "Compile the source code of the project."
+
+    script:
+     
+        - cmake --build $BUILD_DIRECTORY --target compile --clean-first
+
+    after_script:
+        - echo "Compile the source code done."
+
+    artifacts:
+         name: "${CI_BUILD_NAME}"
+         expire_in: 1 hour
+         paths:
+             - $BUILD_DIRECTORY
+
+    cache:
+        key: "$CI_BUILD_REF"
+        untracked: true
+        paths:
+            - $BUILD_DIRECTORY
+
+test-compile:
+    <<: *dedicated-runner
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+    stage: compile
+#    dependencies:
+#         - compile
+
+    before_script:
+        - echo  "Compile the source code of the project."
+
+    script:
+
+        - cmake --build $BUILD_DIRECTORY --target test-compile 
+
+    after_script:
+        - echo "Compile the source code done."
+
+
+unit-test:
+    <<: *dedicated-runner
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+        TEST_ARGS: "--iterration 1 --outputpath $BUILD_DIRECTORY --module dummy"
+    stage: unit-test
+
+    before_script:
+        - echo "Run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed."
+
+    script:
+
+        - cmake --build $BUILD_DIRECTORY --target unit-test 
+
+    after_script:
+        - echo " ${CI_PROJECT_NAME} Unit testing done."
+
+
+target-package:
+    <<: *dedicated-runner
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+    stage: target-package
+    before_script:
+        - echo  "Take the compiled code and package it in its distributable format, such as a ZIP."
+    script:
+        - uname -a
+    after_script:
+        - echo "${CI_PROJECT_NAME} "
+
+
+feature-test:
+    <<: *dedicated-runner
+    variables:
+        JOB_DATE: "date +%Y-%m-%d-%H:%M:%S"
+    stage: feature-test
+    before_script:
+        - echo  "Process and deploy the package if necessary into an environment where integration tests can be run."
+    script:
+
+        - cmake --build $BUILD_DIRECTORY --target feature-test
+
+    after_script:
+        - echo "Done."
+

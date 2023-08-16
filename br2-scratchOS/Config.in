@@ -1,1 +1,47 @@
 
+
+# menu "RT Executive packages"
+
+# menu " Linux drivers"
+# endmenu
+
+# menu "Applications"
+# #    source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/Config.in"
+# endmenu
+
+# menu "3rd Party"
+# #    source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/Config.in"
+# endmenu
+
+
+menu "RT Executive packages"
+    comment "-------------------------------------------------------"
+    comment "Note:                                                  "
+    comment "- Buildroot does *not* generate binary packages,       "
+    comment "- Buildroot does *not* install any package database.   "
+    comment "*                                                      "
+    comment "It is up to you to provide those by yourself if you    "
+    comment "want to use any of those package managers.             "
+    comment "*                                                      "
+    comment "-------------------------------------------------------"
+    menu "3rd Party"
+        source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/atop2/Config.in"
+        source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/btop/Config.in"
+        source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/netatop/Config.in"
+#        if BR2_PACKAGE_RUBY
+        source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/cucumber-cpp/Config.in"
+#        endif
+    endmenu
+
+    menu "Linux drivers"
+        if BR2_LINUX_KERNEL
+
+            menu "Linux Kernel Space Drivers"
+            endmenu
+
+            menu "Linux Users Space Drivers"
+            endmenu
+        endif
+    endmenu
+endmenu
+
