@@ -9,8 +9,12 @@
  sha256  cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  LICENSE
 --- buildroot/package/log4cxx/log4cxx.mk.orig
 +++ buildroot/package/log4cxx/log4cxx.mk
-@@ -4,7 +4,7 @@
+@@ -2,9 +2,11 @@
  #
+ # log4cxx
+ #
++#LOG4CXX_VERSION = d6aad68ef91cc13df9710f5801819dbea003c00f
++#LOG4CXX_SITE = $(call github,intel,logging-log4cxx,$(LOG4CXX_VERSION))
  ################################################################################
  
 -LOG4CXX_VERSION = 0.13.0

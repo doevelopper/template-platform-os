@@ -12,3 +12,10 @@ fi
 
 # exnsure overlays exists for genimage
 mkdir -p "${BINARIES_DIR}/rpi-firmware/overlays"
+
+# Generate ssh keys
+# rm -f ${TARGET_DIR}/etc/ssh/ssh_host_*
+# ssh-keygen -f ${TARGET_DIR}/etc/ssh/ssh_host_rsa_key -N '' -t rsa
+# ssh-keygen -f ${TARGET_DIR}/etc/ssh/ssh_host_dsa_key -N '' -t dsa
+# ssh-keygen -f ${TARGET_DIR}/etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa
+# ssh-keygen -f ${TARGET_DIR}/etc/ssh/ssh_host_ed25519_key -N '' -t ed25519

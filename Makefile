@@ -131,7 +131,6 @@ $(addsuffix -uboot-menuconfig,$(TARGET_BOARD)): %-uboot-menuconfig: $(TARGET_BOA
 $(addsuffix -busybox-menuconfig,$(TARGET_BOARD)): %-busybox-menuconfig: $(TARGET_BOARD)-configure
 	$(Q)$(call MESSAGE,"$(TARGET_BOARD) [Change the Busybox configuration.] $*")
 	$(Q)$(BLRT_CMD) busybox-menuconfig
-	$(Q)$(BLRT_CMD) busybox-savedefconfig
 	$(Q)echo
 	$(Q)echo Going to update your board/$(TARGET_BOARD)/configs/busybox.config. If you do not have one,
 	$(Q)echo you will get an error shortly. You will then have to make one and update,

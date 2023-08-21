@@ -2,6 +2,8 @@
 #
 # log4cxx
 #
+#LOG4CXX_VERSION = d6aad68ef91cc13df9710f5801819dbea003c00f
+#LOG4CXX_SITE = $(call github,intel,logging-log4cxx,$(LOG4CXX_VERSION))
 ################################################################################
 
 LOG4CXX_VERSION = 1.1.0
