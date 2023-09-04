@@ -7,3 +7,6 @@ tmpfs		        /tmp		    tmpfs	mode=1777	                            0	    0
 tmpfs		        /run		    tmpfs	mode=0755,nosuid,nodev	                0	    0
 sysfs		        /sys		    sysfs	defaults	                            0	    0
 #/dev/mmcblk0p3     /home/rpi       vfat    defaults,uid=1000,gid=1000              0       0
+#192.168.10.2:/srv/nfs /media/nfs nfs defaults,user,auto,_netdev,bg 0 0
+#192.168.10.2:/srv/nfs /media/nfs nfs soft,timeo=5,rsize=8192,wsize=8192 0 0
+#192.168.10.2:/srv/nfs /media/nfs nfs soft,rsize=8192,wsize=8192,nofail,x-systemd.automount,x-systemd.device-timeout=45 0 0

@@ -1,41 +1,38 @@
-# Please note that this is only a sample, we recommend you to change it to fit
-# your needs.
-# You should override this file using BR2_PACKAGE_RPI_FIRMWARE_CONFIG_FILE.
-# See http://buildroot.org/manual.html#rootfs-custom
-# and http://elinux.org/RPiconfig for a description of config.txt syntax
-
 start_file=start.elf
 fixup_file=fixup.dat
-
-#kernel=Image
+enable_uart=1
+# kernel=Image
 kernel=u-boot.bin
-
-# To use an external initramfs file
-#initramfs rootfs.cpio.gz
-
-# Disable overscan assuming the display supports displaying the full resolution
-# If the text shown on the screen disappears off the edge, comment this out
-disable_overscan=1
-
-# How much memory in MB to assign to the GPU on Pi models having
-# 256, 512 or 1024 MB total memory
-gpu_mem_256=100
-gpu_mem_512=100
-gpu_mem_1024=100
-
-# fixes rpi (3B, 3B+, 3A+, 4B and Zero W) ttyAMA0 serial console
-dtoverlay=miniuart-bt
-
-# enable autoprobing of Bluetooth driver without need of hciattach/btattach
-dtoverlay=krnbt=on
-
-# enable 64bits support
 arm_64bit=1
+dtparam=i2c_arm=on,i2c1=on
+dtparam=spi=on
 
 
-dtparam=i2c_arm=on
-dtparam=i2s=on
-#dtoverlay=xxx
 
-#To tell the RPi3B to start in ARMv8-mode
-#arm_control=0x200
+# # Disable the ACT LED.
+# dtparam=act_led_trigger=none
+# dtparam=act_led_activelow=off
+
+# # Disable the PWR LED.
+# dtparam=pwr_led_trigger=none
+# dtparam=pwr_led_activelow=off
+
+# # Disable network leds
+# dtparam=eth_led0=14
+# dtparam=eth_led1=14
+
+# Uncomment this to enable infrared communication.
+#dtoverlay=gpio-ir,gpio_pin=17
+#dtoverlay=gpio-ir-tx,gpio_pin=18
+
+# # Automatically load overlays for detected cameras
+# camera_auto_detect=1
+
+# # Automatically load overlays for detected DSI displays
+# display_auto_detect=1
+
+# # Disable audio
+# dtparam=audio=off
+
+# # Disable bluetooth
+# dtoverlay=disable-bt

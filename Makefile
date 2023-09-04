@@ -23,9 +23,15 @@ include br-external.conf
 ##################################################################################################################################
 # Courtesy to 
 #	https://github.com/fhunleth/bbb-buildroot-fwup/blob/master/Makefile
-#   	https://github.com/RosePointNav/nerves-sdk/blob/master/Makefile
-#   	https://github.com/jens-maus/RaspberryMatic/blob/master/Makefile
+#   https://github.com/RosePointNav/nerves-sdk/blob/master/Makefile
+#   https://github.com/jens-maus/RaspberryMatic/blob/master/Makefile
 ##################################################################################################################################
+
+.PHONY: buildroot
+buildroot:
+	@mkdir -p $(OUTPUT_DIR)
+	@rm -rf $(OUTPUT_DIR)/buildroot || :
+	@git clone -q -b $(BR2_VERSION) --depth 1 $(BR2_GIT_URL) $(OUTPUT_DIR)/buildroot 2>/dev/null
 
 $(BLRT_OOSB)/buildroot-$(BLRT_VERSION).tar.gz.sign:
 	$(Q)$(call MESSAGE,"BLRT [Downloading signature $@ ]")
@@ -151,6 +157,13 @@ $(addsuffix -compile,$(TARGET_BOARD)): | $(BLRT_OOSB)/buildroot-$(BLRT_VERSION) 
 	$(Q)$(call MESSAGE,"$(TARGET_BOARD) [ Copying artifacts to $(BLRT_ARTIFACTS_DIR)]")
 	$(Q)if [ -d $(BLRT_ARTIFACTS_DIR) ]; then rm -Rvf $(BLRT_ARTIFACTS_DIR) && mkdir -pv $(BLRT_ARTIFACTS_DIR); fi
 	$(Q)cp -Rv $(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts/images $(BLRT_ARTIFACTS_DIR)
+	$(Q)echo Copying binaries to tftp server
+	$(Q)rm -vf /srv/tftp/*
+	$(Q)cp -nv $(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts/images/u-boot.bin /srv/tftp/
+	$(Q)cp -nv $(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts/images/bcm2710-rpi-3-b-plus.dtb /srv/tftp/
+	$(Q)cp -nv $(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts/images/bcm2710-rpi-3-b.dtb /srv/tftp/
+	$(Q)cp -nv $(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts/images/bcm2837-rpi-3-b.dtb /srv/tftp/
+	$(Q)cp -nv $(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts/images/Image /srv/tftp/
 #	$(Q)$(MAKE) $(BLRT_MAKEARGS)  BR2_JLEVEL=40
 
 .PHONY: $(addsuffix -unit-testing,$(TARGET_BOARD))
