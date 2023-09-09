@@ -1,0 +1,29 @@
+#!/bin/sh
+
+mkdir -p /var/log/template-py
+
+case "$1" in
+	start)
+		printf "Starting template-py: "
+		start-stop-daemon -S -q -p /var/run/template-py.pid --exec /usr/bin/template-py
+		echo "done"
+		;;
+	stop)
+		printf "Stopping template-py: "
+		start-stop-daemon -K -q -p /var/run/template-py.pid
+		echo "done"
+		;;
+	restart)
+		"$0" stop
+		sleep 5
+		"$0" start
+		;;
+	reload)
+		start-stop-daemon -K -q -p /var/run/template-py.pid -s HUP
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|reload}"
+		exit 1
+esac
+
+exit $?

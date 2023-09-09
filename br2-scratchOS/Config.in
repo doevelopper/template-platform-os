@@ -1,0 +1,34 @@
+menu "Template Platform "
+
+menu "Applications"
+
+    menu "DHS Unit Testing"
+
+    endmenu
+
+    menu "Regression Unit Testing"
+
+    endmenu
+
+    menu "TPL ATP"
+        menu "Ruby Runtime Environment"
+
+        endmenu
+    endmenu
+
+endmenu
+
+
+menu "TPL Drivers"
+
+    menu "Kernel space"
+
+    endmenu
+
+    menu "User space"
+
+    endmenu
+
+endmenu
+
+endmenu
