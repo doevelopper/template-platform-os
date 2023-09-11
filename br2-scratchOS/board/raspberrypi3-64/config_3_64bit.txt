@@ -1,8 +1,8 @@
 start_file=start.elf
 fixup_file=fixup.dat
 enable_uart=1
-# kernel=Image
-kernel=u-boot.bin
+kernel=Image
+#kernel=u-boot.bin
 arm_64bit=1
 dtparam=i2c_arm=on,i2c1=on
 dtparam=spi=on
