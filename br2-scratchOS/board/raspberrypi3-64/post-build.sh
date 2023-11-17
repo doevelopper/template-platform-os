@@ -15,5 +15,22 @@ elif [ -d ${TARGET_DIR}/etc/systemd ]; then
        "${TARGET_DIR}/etc/systemd/system/getty.target.wants/getty@tty1.service"
 fi
 
+# # Use custom cmdline.txt
+# if [ -e ${CMDLINE} ]; then
+#         install -D -m 0644 $CMDLINE \
+#                 $BINARIES_DIR/rpi-firmware/cmdline.txt
+# fi
+
+# Enable use password login with ssh
+if [ -e ${TARGET_DIR}/etc/ssh/sshd_config ]; then
+        sed -i '/^#PasswordAuthentication / s/#//' ${TARGET_DIR}/etc/ssh/sshd_config
+fi
+
+# Enable root use password login
+if [ -e ${TARGET_DIR}/etc/ssh/sshd_config ]; then
+        sed -i '/^#PermitRootLogin/ s/#//' ${TARGET_DIR}/etc/ssh/sshd_config
+    sed -i '/^PermitRootLogin/ s/prohibit-password/yes/' ${TARGET_DIR}/etc/ssh/sshd_config
+fi
+
 # exnsure overlays exists for genimage
 mkdir -p "${BINARIES_DIR}/rpi-firmware/overlays"

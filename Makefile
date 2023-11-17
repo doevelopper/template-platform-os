@@ -37,7 +37,9 @@ $(BLRT_OOSB)/.buildroot-patched: $(BLRT_OOSB)/.buildroot-downloaded
 	$(Q)$(call MESSAGE,"BLRT [Patching buildroot-$(BLRT_VERSION)]")
 
 	$(Q)for p in $(sort $(wildcard buildroot-patches/*.patch)); do \
-		echo "\nApplying $${p}"; \
+		echo "---------------------------------------------------"; \
+		echo "Applying $${p}"; \
+		echo "---------------------------------------------------"; \
 		patch -d $(BLRT_OOSB)/buildroot-$(BLRT_VERSION) --remove-empty-files -p1 < $${p} || exit 237; \
 		[ ! -x $${p%.*}.sh ] || $${p%.*}.sh $(BLRT_OOSB)/buildroot-$(BLRT_VERSION); \
 	done;
@@ -153,6 +155,44 @@ $(REBUILD_LINUX_CFG): %-linux-rebuild:
 $(REBUILD_BUSYBOX_CFG): %-busybox-rebuild:
 	$(Q)$(call MESSAGE,"BLRT [Rebuilding after $(call UC, $(word 1,$(subst -, ,$(subst $*-,,$@)))) $* configuration change!]")
 	$(Q)$(MAKE) $(BLRT_MAKEARGS) O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
+
+
+##################################################################################################################################
+#
+#                                     BR2 Clean goals
+#
+##################################################################################################################################
+
+$(BLRT_CLEAN): %-clean:
+	$(Q)$(call MESSAGE,"[  Delete all files created by $*'s build]")
+	$(Q)$(MAKE) $(BLRT_MAKEARGS) O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
+
+$(BLRT_DISTCLEAN): %-distclean:
+	$(Q)$(call MESSAGE,"[  Delete all non-source files including $*'s .config ]")
+	$(Q)$(MAKE) $(BLRT_MAKEARGS) O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
+
+##################################################################################################################################
+#
+#                                     Artifact upload to targets
+#
+##################################################################################################################################
+
+$(BURN_ARTIFACTS): %-upload:
+	$(Q)$(call MESSAGE,"[ Uploading $*'s artifacts")
+	@if grep -q 'BR2_PACKAGE_SWUPDATE=y' $(BLRT_OOSB)/$*-build-artifacts/.config; then \
+        echo "--- (swupdate) $* ---" ; \
+    else \
+        echo "--- (skip swupdate) $* ---" ; \
+    fi
+
+$(UPGRADE_ARTIFACTS): %--upgrade:
+	$(Q)$(call MESSAGE,"[ Upgrading $*'s artifacts")
+	@if grep -q 'BR2_PACKAGE_SWUPDATE=y' $(BLRT_OOSB)/$*-build-artifacts/.config; then \
+        echo "--- (swupdate) $* ---" ; \
+    else \
+        echo "--- (skip swupdate) $* ---" ; \
+    fi
+
 
 .PHONY: help
 help: ## Display this help and exits.

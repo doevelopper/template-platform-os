@@ -66,6 +66,10 @@ BR_SAVE_CONFIG			:= 	$(notdir $(patsubst %_defconfig,%-savedefconfig,$(wildcard 
 REBUILD_LINUX_CFG 		:= 	$(notdir $(patsubst %_defconfig,%-linux-rebuild,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
 REBUILD_UBOOT_CFG 		:= 	$(notdir $(patsubst %_defconfig,%-uboot-rebuild,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
 REBUILD_BUSYBOX_CFG		:= 	$(notdir $(patsubst %_defconfig,%-busybox-rebuild,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
+BLRT_CLEAN              :=  $(notdir $(patsubst %_defconfig,%-clean,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
+BLRT_DISTCLEAN          :=  $(notdir $(patsubst %_defconfig,%-distclean,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
+BURN_ARTIFACTS          :=  $(notdir $(patsubst %_defconfig,%-upload,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
+UPGRADE_ARTIFACTS       :=  $(notdir $(patsubst %_defconfig,%-upgrade,$(wildcard $(DEFCONFIG_DIR)/*_defconfig)))
 
 BLRT_MAKEARGS			:= 	-C $(BLRT_DIR)
 BLRT_MAKEARGS 			+= 	BR2_EXTERNAL=$(PWD)/$(BLRT_EXT)
